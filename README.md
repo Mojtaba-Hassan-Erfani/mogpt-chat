@@ -17,47 +17,49 @@ MoGPT-Chat is a powerful and feature-rich chat interface built with Next.js and 
 
 ## Getting Started
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
 To get started, follow these steps:
 
 1. Clone the repository:
 
-https://github.com/Mojtaba-Hassan-Erfani/mogpt-chat.git
+    https://github.com/Mojtaba-Hassan-Erfani/mogpt-chat.git
 
 
 2. Change into the project directory:
 
-cd mogpt-chat
+    cd mogpt-chat
 
 
 3. Install the dependencies:
 
-npm install
+    npm install
 
 
 4. Create a `.env.local` file in the root directory of the project and add your OpenAI API key:
 
-Replace `your_api_key_here` with your actual OpenAI API key.
+    OPENAI_API_KEY=your_api_key_here
 
-5. Start the development server:
+    Replace `your_api_key_here` with your actual OpenAI API key.
 
-npm run electron-dev
+1. Start the development server:
 
-The MoGPT-Chat application should now be running in an Electron window.
+    npm run electron-dev
+
+    Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+    The MoGPT-Chat application should now be running in an Electron window.
 
 ## Building the Application for Production
 
 1. Build the Next.js application for production:
 
-npm run build
+    npm run build
 
 
 2. Package the Electron application for production:
 
-npm run electron-build
+    npm run electron-build
 
-You will find the packaged application in the `dist` directory.
+    You will find the packaged application in the `dist` directory.
 
 ## Available Scripts
 
