@@ -1,0 +1,22 @@
+appId: com.simplify.moji
+productName: Moji
+directories:
+  output: dist
+  buildResources: resources
+files:
+  - '!**/*'
+  - dist
+  - package.json
+  - electron.js
+asar: true
+win:
+  target:
+    - nsis
+mac:
+  target:
+    - dmg
+    - zip
+linux:
+  target:
+    - AppImage
+    - deb
