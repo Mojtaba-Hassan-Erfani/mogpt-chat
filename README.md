@@ -33,13 +33,6 @@ To get started, follow these steps:
 
     npm install
 
-
-4. Create a `.env.local` file in the root directory of the project and add your OpenAI API key:
-
-    OPENAI_API_KEY=your_api_key_here
-
-    Replace `your_api_key_here` with your actual OpenAI API key.
-
 1. Start the development server:
 
     npm run electron-dev
