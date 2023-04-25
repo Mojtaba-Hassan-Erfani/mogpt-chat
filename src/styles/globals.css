@@ -87,12 +87,7 @@ body {
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background-color:#F5F8FA !important;
 }
 
 a {
@@ -105,3 +100,40 @@ a {
     color-scheme: dark;
   }
 }
+
+.bot-message {
+  background-color: #D9E9FF;
+}
+
+.message-text {
+  color: #333333 !important;
+  font-family: 'Roboto', sans-serif;
+  font-size: 15px;
+}
+
+/* Style the scrollbar */
+::-webkit-scrollbar {
+  width: 5px; /* Width of the scrollbar */
+}
+
+/* Style the scrollbar track (background) */
+::-webkit-scrollbar-track {
+  background-color: none; /* Light gray background color */
+}
+
+/* Style the scrollbar thumb (the moving part) */
+::-webkit-scrollbar-thumb {
+  background-color: #B0B0B0; /* Gray color for the thumb */
+  border-radius: 5px; /* Rounded corners for the thumb */
+}
+
+.chat-messages-container {
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.row-padding {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
