@@ -2,7 +2,7 @@ import Head from 'next/head'
 
 import LeftSidebar from '@/components/LeftSidebar';
 import RightSidebar from '@/components/RightSidebar';
-import ChatInterface from '@/components/ChatInterface';
+import ChatBox from '@/components/ChatBox';
 
 // import styles from '@/styles/Home.module.css'
 
@@ -24,7 +24,7 @@ export default function Home() {
 					{/* Left sidebar */}
 					<LeftSidebar></LeftSidebar>
 					{/* Chat interface */}
-					<ChatInterface></ChatInterface>
+					<ChatBox></ChatBox>
 					{/* Right sidebar */}
 					<RightSidebar></RightSidebar>
 				</div>
