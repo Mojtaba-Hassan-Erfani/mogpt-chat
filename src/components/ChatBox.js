@@ -1,7 +1,7 @@
 
 import { useEffect, useRef } from 'react';
 
-const ChatInterface = () => {
+const ChatBox = () => {
 
     const textareaRef = useRef();
 
@@ -84,4 +84,4 @@ These 200 words of Lorem Ipsum text can be used as placeholder content in your d
     )
 }
 
-export default ChatInterface;
+export default ChatBox;
