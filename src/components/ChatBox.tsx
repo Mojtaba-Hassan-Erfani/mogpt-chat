@@ -1,25 +1,34 @@
-import { useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 
 const ChatBox = () => {
-   const textareaRef = useRef(null);
+   const [ prompt, setPrompt ] = useState( '' );
+   const [ isLoading, setIsLoading ] = useState( false );
+   const [ response, setResponse ] = useState( '' );
 
-   const handleTextareaResize = () => {
-      if (textareaRef.current) {
-         textareaRef.current.style.height = 'auto';
-         textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-      }
+   const getResponseFromOpenAi = async () => {
+      setResponse( '' );
+      setIsLoading( true );
+
+      const response = await fetch( '/api/openai', {
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/json',
+         },
+         body: JSON.stringify( { prompt: prompt } ),
+      } );
+
+      const data = await response.json();
+      setIsLoading( false );
+      console.log( data.text );
+      setResponse( data.text );
    };
 
-   useEffect(() => {
-      handleTextareaResize();
-      const textareaRefCopy: any = textareaRef;
-
-      return () => {
-         if (textareaRefCopy) {
-            textareaRefCopy.current.style.height = null;
-         }
-      };
-   }, []);
+   const handleKeyDown = ( e: React.KeyboardEvent<HTMLTextAreaElement> ) => {
+      if ( e.key === 'Enter' && !e.shiftKey ) {
+         e.preventDefault();
+         getResponseFromOpenAi();
+      }
+   };
 
    return (
       <div className="col-md-8 mx-auto d-flex flex-column row-padding">
@@ -39,7 +48,6 @@ const ChatBox = () => {
                      <textarea
                         className="form-control"
                         id="chatbox-input"
-                        ref={textareaRef}
                         placeholder="Type your message here..."
                         style={{
                            maxHeight: '500px',
@@ -49,7 +57,10 @@ const ChatBox = () => {
                            borderLeft: 'none',
                         }}
                         rows={1}
-                        onChange={handleTextareaResize}
+                        onChange={( e ) => {
+                           setPrompt( e.target.value );
+                        }}
+                        onKeyDown={handleKeyDown}
                      ></textarea>
                      <div
                         className="input-group-append"
@@ -61,7 +72,7 @@ const ChatBox = () => {
                            paddingRight: '5px',
                         }}
                      >
-                        <a type="submit">
+                        <a type="submit" onClick={getResponseFromOpenAi}>
                            <i
                               className="bi bi-chevron-right"
                               style={{
@@ -79,70 +90,40 @@ const ChatBox = () => {
                   style={{ height: 'calc(100vh - 120px)' }}
                >
                   {/*  Sample chat messages  */}
-                  <div className="d-flex justify-content-between mb-3">
-                     <div className="p-2 rounded bg-light">
-                        <p>
-                           <strong>User: </strong>Hello! How are you?
-                        </p>
+                  {prompt && (
+                     <div className="d-flex justify-content-between mb-3">
+                        <div className="p-2 rounded bg-light">
+                           <p>
+                              <strong>User: </strong> {prompt}
+                           </p>
+                        </div>
+                        <i
+                           className="bi bi-pin-angle"
+                           style={{ fontSize: '1rem' }}
+                        ></i>
                      </div>
-                     <i
-                        className="bi bi-pin-angle"
-                        style={{ fontSize: '1rem' }}
-                     ></i>
-                  </div>
+                  )}
                   <div className="d-flex mb-3 justify-content-end">
-                     <div className="p-2 rounded bot-message">
-                        <p>
-                           <strong>Moji: </strong>I&#39;m doing well, thank you!
-                           How can I help you today?
-                        </p>
-                     </div>
+                     {isLoading ? (
+                        <div
+                           className="spinner-border"
+                           role="status"
+                           style={{ fontSize: '1rem' }}
+                        >
+                           <span className="visually-hidden">Loading...</span>
+                        </div>
+                     ) : (
+                        response && (
+                           <div className="p-2 rounded bot-message">
+                              <p>
+                                 <strong>Moji: </strong>
+                                 {response}
+                              </p>
+                           </div>
+                        )
+                     )}
                   </div>
-                  <div className="d-flex justify-content-between mb-3">
-                     <div className="p-2 rounded bg-light">
-                        <p>
-                           <strong>User: </strong>Give me 200 words of lorem
-                           ipsum.
-                        </p>
-                     </div>
-                     <i
-                        className="bi bi-pin-angle-fill"
-                        style={{ fontSize: '1rem' }}
-                     ></i>
-                  </div>
-                  <div className="d-flex mb-3 justify-content-end">
-                     <div className="p-2 rounded bot-message">
-                        <p>
-                           <strong>Moji: </strong>Lorem ipsum dolor sit amet,
-                           consectetur adipiscing elit. Vestibulum et erat eu
-                           tellus tincidunt varius. Proin sodales dui eget risus
-                           venenatis, vel consectetur magna cursus. Pellentesque
-                           accumsan neque id volutpat laoreet. Aenean nec velit
-                           vitae est imperdiet ultrices id id elit. Etiam
-                           ultricies tincidunt elit, nec ultrices arcu tempor
-                           nec. Pellentesque facilisis nisi vitae purus
-                           venenatis, at tempor enim bibendum. Integer eget odio
-                           nibh. Mauris rhoncus libero vitae felis ullamcorper,
-                           non pharetra lectus consequat. Duis ac orci a mi
-                           condimentum viverra. Nulla facilisi. Vestibulum nec
-                           quam neque. Nullam auctor libero eu nulla pharetra,
-                           et hendrerit odio laoreet. Nunc faucibus facilisis
-                           ex, et fringilla libero. Integer fringilla sapien ac
-                           sem tincidunt, in cursus mi commodo. Cras vel
-                           elementum velit. Phasellus condimentum neque quis
-                           odio consectetur, vitae euismod mauris laoreet. Donec
-                           et commodo sem. Sed auctor bibendum quam, ac
-                           ultricies est condimentum in. Suspendisse potenti. In
-                           laoreet elit et orci venenatis, vitae feugiat quam
-                           vehicula. Nunc tempus, sem at fermentum iaculis,
-                           lectus libero feugiat libero, nec cursus metus tellus
-                           vitae erat. Etiam mollis dapibus sapien, id ultricies
-                           lorem. These 200 words of Lorem Ipsum text can be
-                           used as placeholder content in your design or
-                           development projects.
-                        </p>
-                     </div>
-                  </div>
+
                   {/*  End of chat messages  */}
                </div>
             </div>
