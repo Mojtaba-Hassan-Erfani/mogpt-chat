@@ -6,7 +6,7 @@ MoGPT-Chat is a powerful and feature-rich chat interface built with Next.js, des
 
 -  Responsive chat interface using Bootstrap
 -  Integration with OpenAI's API for AI-powered chatbot functionality
--  Support for both free and paid OpenAI API access
+-  Support OpenAI API access ( requires payment )
 
 ## Prerequisites
 
