@@ -12,7 +12,6 @@ MoGPT-Chat is a powerful and feature-rich chat interface built with Next.js, des
 
 -  Node.js (recommended version: 16.13.x or higher)
 -  NPM (recommended version: 6.x or higher) or Yarn (recommended version: 1.x or higher)
--  OpenAI API key (either free or paid)
 
 ## Getting Started
 
@@ -32,17 +31,15 @@ To get started, follow these steps:
 
 4. Start the development server:
 
-   npm run electron-dev
+   npm run dev
 
    Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
 
 ## Building the Application for Production
 
 1. Build the Next.js application for production:
 
    npm run build
-
 
    You will find the packaged application in the `dist` directory.
 
@@ -53,7 +50,8 @@ The following scripts are available in the `package.json` file:
 -  `dev`: Starts the Next.js development server
 -  `build`: Builds the Next.js application for production
 -  `start`: Starts the Next.js production server
--  `lint`: Lints the code using Next.js Lint
+-  `lint`: Show the lint errors
+-  `lint:fix`: Auto lints the codebase
 -  `format`: format the code using prettier
 
 ## Contributing
