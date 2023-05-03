@@ -1,6 +1,6 @@
 import { Pool } from 'pg';
 
-const pool = new Pool({
+const pool = new Pool( {
    host: process.env.DB_HOST,
    port: process.env.DB_PORT,
    user: process.env.DB_USER,
@@ -10,12 +10,14 @@ const pool = new Pool({
    ssl: {
       rejectUnauthorized: false, // Set this to true for production
    },
-});
+} );
 
-export async function query(text: string) {
+const query = async( text: string ) => {
    const start = Date.now();
-   const res = await pool.query(text);
+   const res = await pool.query( text );
    const duration = Date.now() - start;
-   console.log('Executed query', { text, duration, rows: res.rowCount });
+   console.log( 'Executed query', { text, duration, rows: res.rowCount } );
    return res;
 }
+
+export default query;
