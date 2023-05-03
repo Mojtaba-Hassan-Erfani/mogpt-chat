@@ -1,35 +1,29 @@
 {
-  "name": "moji-chat",
-  "version": "0.1.0",
-  "private": true,
-  "main": "main.js",
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "electron": "electron electron.js",
-    "electron-build": "NODE_ENV=production electron-builder --config electron-builder.yml",
-    "electron-rebuild": "electron-rebuild",
-    "electron-dev": "concurrently \"npm run dev\" \"npm run electron-build && electron dist/electron.js\"",
-    "package": "electron-builder --publish=never"
-  },
-  "dependencies": {
-    "eslint": "8.38.0",
-    "eslint-config-next": "13.3.0",
-    "next": "^13.3.0",
-    "pg": "^8.10.0",
-    "react": "18.2.0",
-    "react-dom": "18.2.0"
-  },
-  "devDependencies": {
-    "bootstrap": "^5.2.3",
-    "concurrently": "^8.0.1",
-    "electron": "^24.0.0",
-    "electron-builder": "^24.2.0",
-    "electron-is-dev": "^2.0.0",
-    "esbuild": "^0.17.15",
-    "esm": "^3.2.25",
-    "sass": "^1.61.0"
-  }
+   "name": "moji-chat",
+   "version": "0.1.0",
+   "private": true,
+   "main": "main.js",
+   "scripts": {
+      "dev": "next dev",
+      "build": "next build",
+      "start": "next start",
+      "lint": "next lint",
+      "format": "prettier --write --ignore-path .gitignore ."
+   },
+   "dependencies": {
+      "@types/react": "^18.2.0",
+      "eslint": "8.38.0",
+      "eslint-config-next": "13.3.0",
+      "next": "^13.3.0",
+      "pg": "^8.10.0",
+      "react": "18.2.0",
+      "react-dom": "18.2.0"
+   },
+   "devDependencies": {
+      "bootstrap": "^5.2.3",
+      "esbuild": "^0.17.15",
+      "esm": "^3.2.25",
+      "prettier": "^2.8.8",
+      "sass": "^1.61.0"
+   }
 }
