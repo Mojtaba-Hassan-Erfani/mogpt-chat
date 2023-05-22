@@ -70,7 +70,7 @@ const ChatBox = () => {
    // ---------------------------------------------------------------------------------------
 
    return (
-    <div className="chatbox-container col-md-8">
+    <div className="chatbox-container d-flex col-md-8">
 
         {/*  Prompt request and response messages  */}
         <div className="prompt-display">
