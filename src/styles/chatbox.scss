@@ -15,13 +15,12 @@
 
         & .prompt-req {
             --bs-bg-opacity: 1;
-            background-color: rgba(var(--bs-light-rgb), var(--bs-bg-opacity)) !important;
+            background-color: #d9e9ff;
             padding: 0.5rem !important;
             border-radius: var(--bs-border-radius) !important;
         }
 
         & .prompt-res {
-            background-color: #d9e9ff;
             padding: 0.5rem !important;
             border-radius: var(--bs-border-radius) !important;
         }
