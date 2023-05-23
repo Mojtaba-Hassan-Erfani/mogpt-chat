@@ -14,8 +14,11 @@ const handler = async ( req: NextApiRequest, res: NextApiResponse ) => {
          const completion = await openai.createCompletion( {
             model: 'text-davinci-003',
             prompt: `${req.body.prompt}`,
+            max_tokens: 150,
+            frequency_penalty: 0.5,
+            temperature: 0.7,
          } );
-         console.log( 'OpenAI handler is working' );
+
          res.status( 200 ).json( { text: `${completion.data.choices[0].text}` } );
       } catch ( error ) {
          console.log( 'Error: ', error );
