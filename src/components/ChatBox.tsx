@@ -11,17 +11,11 @@ const ChatBox = () => {
 
     const [ messages, setMessages ] = useState<Message[]>( [] );
     const [ prompt, setPrompt ] = useState( '' );
-    // const [ isLoading, setIsLoading ] = useState( false );
+    const [ isLoading, setIsLoading ] = useState( false );
 
     // OpenAI API handling.
     // ---------------------------------------------------------------------------------------
     const getResponseFromOpenAi = async ( prompt: string ) => {
-        // setIsLoading( true );
-
-        // If userInput is empty or only contains spaces, return earlier.
-        if ( ! prompt || prompt.trim() === '' ) {
-            return;
-        }
 
         const response = await fetch( '/api/openai', {
             method: 'POST',
@@ -33,9 +27,7 @@ const ChatBox = () => {
 
         const data = await response.json();
 
-        return data.next;
-
-
+        return data.text;
     };
     // ---------------------------------------------------------------------------------------
 
@@ -72,7 +64,6 @@ const ChatBox = () => {
             event.preventDefault();
             handleSendMessage();
 
-
             // Clear the textarea after sending the prompt.
             textAreaRef.current.value = '';
         }
@@ -86,14 +77,15 @@ const ChatBox = () => {
             return;
         }
 
+        setIsLoading( true );
+
         // Add the prompt and response to the messages array.
         setMessages( prevMessages => [ ...prevMessages, { isUser: true, text: prompt } ] );
 
         const response = await getResponseFromOpenAi( prompt );
-
         setMessages( prevMessages => [ ...prevMessages, { isUser: false, text: response } ] );
 
-        // setIsLoading( false );
+        setIsLoading( false );
    }
 
    // ---------------------------------------------------------------------------------------
@@ -121,6 +113,14 @@ const ChatBox = () => {
                     ) }
                 </div>
             ) ) }
+            {/* Display loading spinner if isLoading is true */}
+            {isLoading &&
+                <div className="d-flex mb-3 justify-content-start">
+                    <div className="spinner-border" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            }
         </div>
         {/* End Prompt request and response messages  */}
         <form className="chatbox" onSubmit={handleSendMessage}>
