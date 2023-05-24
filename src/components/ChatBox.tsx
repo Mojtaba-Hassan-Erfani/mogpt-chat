@@ -23,29 +23,19 @@ const ChatBox = () => {
             return;
         }
 
-        try {
-            const response = await fetch( '/api/openai', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify( { prompt: prompt } ),
-            } );
+        const response = await fetch( '/api/openai', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify( { prompt: prompt } ),
+        } );
 
-            if ( ! response.ok ) {
-                console.log( 'Error status', response.status );
-            }
+        const data = await response.json();
 
-            const data = await response.json();
+        return data.next;
 
-            if ( ! data.next ) {
-                console.log( "No 'next' field in response data", data );
-            }
 
-            return data.next;
-        } catch ( error ) {
-            console.log( 'Error fetching data', error );
-        }
     };
     // ---------------------------------------------------------------------------------------
 
@@ -96,14 +86,12 @@ const ChatBox = () => {
             return;
         }
 
+        // Add the prompt and response to the messages array.
+        setMessages( prevMessages => [ ...prevMessages, { isUser: true, text: prompt } ] );
+
         const response = await getResponseFromOpenAi( prompt );
 
-        // Add the prompt and response to the messages array.
-        setMessages( prevMessages => [
-            ...prevMessages,
-            { isUser: true, text: prompt },
-            { isUser: false, text: response }
-        ] );
+        setMessages( prevMessages => [ ...prevMessages, { isUser: false, text: response } ] );
 
         // setIsLoading( false );
    }
