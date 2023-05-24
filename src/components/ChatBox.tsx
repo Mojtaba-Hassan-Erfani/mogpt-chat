@@ -2,35 +2,56 @@ import React, { useRef, useEffect, useState } from 'react';
 
 const ChatBox = () => {
 
+    // Types..
+    interface Message {
+        isUser: boolean;
+        text: string;
+    }
+
+
+    const [ messages, setMessages ] = useState<Message[]>( [] );
+    const [ prompt, setPrompt ] = useState( '' );
+    // const [ isLoading, setIsLoading ] = useState( false );
+
     // OpenAI API handling.
     // ---------------------------------------------------------------------------------------
-    const [ prompt, setPrompt ] = useState( '' );
-    const [ isLoading, setIsLoading ] = useState( false );
-    const [ response, setResponse ] = useState( '' );
+    const getResponseFromOpenAi = async ( prompt: string ) => {
+        // setIsLoading( true );
 
-    const getResponseFromOpenAi = async () => {
-        setResponse( '' );
-        setIsLoading( true );
+        // If userInput is empty or only contains spaces, return earlier.
+        if ( ! prompt || prompt.trim() === '' ) {
+            return;
+        }
 
-        const response = await fetch( '/api/openai', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify( { prompt: prompt } ),
-        } );
+        try {
+            const response = await fetch( '/api/openai', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify( { prompt: prompt } ),
+            } );
 
-        const data = await response.json();
-        setIsLoading( false );
-        console.log( data.text );
-        setResponse( data.text );
+            if ( ! response.ok ) {
+                console.log( 'Error status', response.status );
+            }
+
+            const data = await response.json();
+
+            if ( ! data.next ) {
+                console.log( "No 'next' field in response data", data );
+            }
+
+            return data.next;
+        } catch ( error ) {
+            console.log( 'Error fetching data', error );
+        }
     };
     // ---------------------------------------------------------------------------------------
 
 
     // Textarea functionality.
     // ---------------------------------------------------------------------------------------
-    const formRef = useRef<HTMLFormElement | null>( null );
     const textAreaRef = useRef<HTMLTextAreaElement | null>( null );
 
     useEffect( () => {
@@ -55,18 +76,38 @@ const ChatBox = () => {
     }, [] );
 
     // Handle Enter action for Textarea.
-    const handleKeyDown = ( e: React.KeyboardEvent<HTMLTextAreaElement> ) => {
+    const handleKeyDown = ( event : React.KeyboardEvent<HTMLTextAreaElement> ) => {
 
-        if ( e.key === 'Enter' && ! e.shiftKey ) {
-            e.preventDefault();
+        if ( event.key === 'Enter' && ! event.shiftKey ) {
+            event.preventDefault();
+            handleSendMessage();
 
-            if ( textAreaRef.current?.value.trim() !== "" ) {
-                getResponseFromOpenAi();
-                formRef.current?.reset(); // TODO: Still not working.
-            }
+
+            // Clear the textarea after sending the prompt.
+            textAreaRef.current.value = '';
+        }
+    };
+
+    // Handle the messages to render correctly.
+   // ---------------------------------------------------------------------------------------
+   const handleSendMessage = async () => {
+
+        if ( ! prompt || prompt.trim() === '' ) {
+            return;
         }
 
-    };
+        const response = await getResponseFromOpenAi( prompt );
+
+        // Add the prompt and response to the messages array.
+        setMessages( prevMessages => [
+            ...prevMessages,
+            { isUser: true, text: prompt },
+            { isUser: false, text: response }
+        ] );
+
+        // setIsLoading( false );
+   }
+
    // ---------------------------------------------------------------------------------------
 
    return (
@@ -74,39 +115,27 @@ const ChatBox = () => {
 
         {/*  Prompt request and response messages  */}
         <div className="prompt-display">
-
-            {prompt && prompt.trim() !== '' && (
-                <div className="d-flex justify-content-between mb-3">
-                    <div className="prompt-req">
-                        <p>
-                            <strong>User: </strong> {prompt}
-                        </p>
-                    </div>
-                    <i className="bi bi-pin-angle"></i>
-                </div>
-            )}
-
-            <div className="d-flex mb-3 justify-content-end">
-
-                {isLoading ? (
-                    <div className="spinner-border" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                    </div>
-                ) : (
-                response && (
-                    <div className="prompt-res">
-                        <p>
+            {messages.map( ( message, index ) => (
+                <div key={index} className={message.isUser ? "d-flex justify-content-between mb-3" : "d-flex mb-3 justify-content-start"}>
+                    {message.isUser ? (
+                        <div className="prompt-req">
+                            <p>
+                            <strong>Prompt: </strong> {message.text}
+                            </p>
+                        </div>
+                    ) : (
+                        <div className="prompt-res">
+                            <p>
                             <strong>Moji: </strong>
-                            {response}
-                        </p>
-                    </div>
-                )
-                )}
-
-            </div>
+                            {message.text}
+                            </p>
+                        </div>
+                    ) }
+                </div>
+            ) ) }
         </div>
         {/* End Prompt request and response messages  */}
-        <form className="chatbox">
+        <form className="chatbox" onSubmit={handleSendMessage}>
             <div className="mb-3 input-group">
                 <label htmlFor="prompt-input" className="form-label visually-hidden">
                     Enter your message:
@@ -116,16 +145,14 @@ const ChatBox = () => {
                     placeholder="Type your prompt here..."
                     rows={1}
                     ref={textAreaRef}
-                    onChange={( e ) => {
-                        setPrompt( e.target.value );
-                    }}
                     onKeyDown={handleKeyDown}
+                    onChange={( ( e ) => setPrompt( e.target.value ) ) }
                     ></textarea>
                     <div className="send-icon">
-                    <a type="submit" onClick={getResponseFromOpenAi}>
-                        <i className="bi bi-chevron-right"></i>
-                    </a>
-                </div>
+                        <a onClick={handleSendMessage}>
+                            <i className="bi bi-chevron-right"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </form>
