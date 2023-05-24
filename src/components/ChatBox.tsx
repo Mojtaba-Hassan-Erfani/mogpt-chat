@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
+import { emptyPrompt } from '../utils/helpers';
 
 const ChatBox = () => {
 
@@ -19,9 +20,8 @@ const ChatBox = () => {
         // setIsLoading( true );
 
         // If userInput is empty or only contains spaces, return earlier.
-        if ( ! prompt || prompt.trim() === '' ) {
-            return;
-        }
+		if ( emptyPrompt( prompt ) )
+			return;
 
         const response = await fetch( '/api/openai', {
             method: 'POST',
@@ -82,9 +82,8 @@ const ChatBox = () => {
    // ---------------------------------------------------------------------------------------
    const handleSendMessage = async () => {
 
-        if ( ! prompt || prompt.trim() === '' ) {
-            return;
-        }
+		if ( emptyPrompt( prompt ) )
+			return;
 
         // Add the prompt and response to the messages array.
         setMessages( prevMessages => [ ...prevMessages, { isUser: true, text: prompt } ] );
