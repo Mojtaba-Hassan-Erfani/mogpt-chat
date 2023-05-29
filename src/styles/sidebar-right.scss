@@ -1,40 +1,45 @@
 .sidebar-right {
     font-size: .9rem;
 
-}
-
-.pinned-chats {
-    max-height: 70vh;
-}
-
-.form-select {
-    font-size: .9rem;
-    color: #483d3d !important;
-}
-
-.card-body {
-    position: relative;
-    padding: .5rem;
-
-    & p {
-        padding-bottom: 0;
-    }
-
-    & .card-title {
+    & .form-select {
         font-size: .9rem;
-        color: #252525;
+        color: #483d3d !important;
     }
 
-    & .pinned-desc {
-        color: #483d3d;
-        font-size: .8rem;
+    & .pinned-chats {
+        max-height: 70vh;
     }
 
-    & .pinned-icons {
-        position: absolute;
-        right: 5px;
-        top: 5px;
-        font-size: .9rem;
-        color: #483d3d;
+    & .card-body {
+        position: relative;
+        padding: .5rem;
+
+        & p {
+            padding-bottom: 0;
+        }
+
+        & .card-title {
+            font-size: .9rem;
+            color: #252525;
+        }
+
+        & .pinned-desc {
+            color: #483d3d;
+            font-size: .8rem;
+        }
+
+        & .pinned-icons {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            font-size: .9rem;
+            color: #483d3d;
+        }
     }
 }
+
+
+
+
+
+
