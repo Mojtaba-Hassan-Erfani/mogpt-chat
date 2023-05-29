@@ -91,25 +91,26 @@ const ChatBox = () => {
    // ---------------------------------------------------------------------------------------
 
    return (
+
     <div className="chatbox-container d-flex col-md-8">
 
-        {/*  Prompt request and response messages  */}
-        <div className="prompt-display">
+         {/* Prompt request and response messages */}
+        <div className="chat-messages">
             {messages.map( ( message, index ) => (
-                <div key={index} className={message.isUser ? "d-flex justify-content-between mb-3" : "d-flex mb-3 justify-content-start"}>
+                <div key={index} className={`d-flex align-items-start ${message.isUser ? '' : 'prompt-res'}`}>
                     {message.isUser ? (
-                        <div className="prompt-req">
-                            <p>
-                            <strong>Prompt: </strong> {message.text}
-                            </p>
-                        </div>
+                         <><div className="msg-img"></div><div className="msg-bubble">
+                            <span className="msg-text">
+                                {message.text}
+                            </span>
+                            <i className="bi bi-pin-angle-fill msg-pin" />
+                        </div></>
                     ) : (
-                        <div className="prompt-res">
-                            <p>
-                            <strong>Moji: </strong>
-                            {message.text}
-                            </p>
-                        </div>
+                        <><div className="msg-img"></div><div className="msg-bubble">
+                            <span className="msg-text">
+                                {message.text}
+                            </span>
+                        </div></>
                     ) }
                 </div>
             ) ) }
