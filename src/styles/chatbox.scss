@@ -1,28 +1,24 @@
 .chatbox-container {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    flex-direction: column !important;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    flex-direction: column;
+    max-width: 1000px;
 
-    & .prompt-display {
-        color: #333333 !important;
-        font-family: 'Roboto', sans-serif;
-        font-size: 0.9rem;
-        flex-grow: 1;
-        overflow-y: auto;
-        padding-top: 1rem;
+    & .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px;
 
-        & .prompt-req {
-            --bs-bg-opacity: 1;
-            background-color: #d9e9ff;
-            padding: 0.5rem !important;
-            border-radius: var(--bs-border-radius) !important;
+        &::-webkit-scrollbar {
+            width: 6px;
         }
-
-        & .prompt-res {
-            padding: 0.5rem !important;
-            border-radius: var(--bs-border-radius) !important;
+        &::-webkit-scrollbar-track {
+            background: #ddd;
+        }
+        &::-webkit-scrollbar-thumb {
+            background: #bdbdbd;
         }
 
         & {
@@ -30,6 +26,47 @@
                 font-size: 1rem;
             }
         }
+
+        & .msg-img {
+            width: 32px;
+            height: 32px;
+            margin-right: 10px;
+            background: #ddd;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            border-radius: 5px;
+        }
+
+        & .msg-bubble {
+            position: relative;
+            width: 100%;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 1px solid #00a579;
+            background: #F0F8FF;
+            color: #252525;
+            margin-bottom: .4rem;
+        }
+
+        & .msg-pin {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+        }
+
+        & .prompt-res {
+
+            & .msg-bubble {
+                background: #f9fbff;
+                color: #483d3d;
+                border-left: 1px solid #6f6f6f;
+            }
+        }
+
+        .msg-text {
+            font-size: 0.85rem;
+          }
     }
 
     & form {
