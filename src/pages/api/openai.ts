@@ -1,27 +1,32 @@
-import { Configuration, OpenAIApi } from 'openai';
+import { OpenAiStream } from '../../api/openaiApi';
 import { NextApiRequest, NextApiResponse } from 'next';
-
-const configuration = new Configuration( {
-   organization: 'org-ne6CjLTVm9NtzVtimMjXZgSN',
-   apiKey: process.env.OPENAI_API_KEY,
-} );
-
-const openai = new OpenAIApi( configuration );
+import { OpenAIStreamPayload } from '../../types/openai';
 
 const handler = async ( req: NextApiRequest, res: NextApiResponse ) => {
+
+   if ( req.method !== 'POST' ) {
+      res.status( 405 ).json( { text: 'Method not allowd, use POST' } );
+      return;
+   }
    if ( req.body.prompt !== undefined ) {
       try {
-         const completion = await openai.createCompletion( {
-            model: 'text-davinci-003',
-            prompt: `${req.body.prompt}`,
+         const payload: OpenAIStreamPayload = {
+            model: 'gpt-3.5-turbo',
+            messages: [ { role: 'user', content: req.body.prompt } ],
             max_tokens: 150,
-            frequency_penalty: 0.5,
+            frequency_penalty: 0,
             temperature: 0.7,
-         } );
+            top_p: 1,
+            presence_penalty: 0,
+            stream: true,
+            n: 1,
+         };
 
-         res.status( 200 ).json( { text: `${completion.data.choices[0].text}` } );
+         const stream = await OpenAiStream( payload );
+
+         res.status( 200 ).json( { text: stream } );
       } catch ( error ) {
-         console.log( 'Error: ', error );
+         res.status( 500 ).json( { text: 'Error processing request.', error: error.message } );
       }
    } else {
       res.status( 400 ).json( { text: 'No prompt provided.' } );
