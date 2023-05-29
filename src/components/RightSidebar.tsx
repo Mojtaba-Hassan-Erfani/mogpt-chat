@@ -1,6 +1,6 @@
 const RightSidebar = () => {
     return (
-        <div className="side-bar-right d-flex flex-column vh-100 border-end px-4 py-3 col-md-2">
+        <div className="sidebar-right d-flex flex-column vh-100 border-end px-4 py-3 col-md-2">
             <h5 className="text-muted">Language Model</h5>
             <span><small className="text-muted">Choose language model...</small></span>
             <select className="form-select mb-4" aria-label="Language select">
