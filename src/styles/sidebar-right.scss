@@ -1,42 +1,40 @@
 .sidebar-right {
-    font-size: .8rem;
+    font-size: .9rem;
 
-    & .nav {
-        max-height: 42px;
-        padding-top: 0.5rem !important;
-        padding-bottom: 0.5rem !important;
-        justify-content: space-around;
-        border-bottom: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color) !important;
+}
+
+.pinned-chats {
+    max-height: 70vh;
+}
+
+.form-select {
+    font-size: .9rem;
+    color: #483d3d !important;
+}
+
+.card-body {
+    position: relative;
+    padding: .5rem;
+
+    & p {
+        padding-bottom: 0;
     }
 
-    & i {
-        font-size: 1.1rem;
-        cursor: pointer;
+    & .card-title {
+        font-size: .9rem;
+        color: #252525;
     }
 
-    & a {
-        color: var(--bs-body-color);
+    & .pinned-desc {
+        color: #483d3d;
+        font-size: .8rem;
     }
 
-    & .bookmark{
-        padding-top: 1rem;
-        padding-left: 0 !important;
-        list-style: none;
-
-        & li {
-            line-height: 3;
-            align-items: center;
-            padding-left: 1rem;
-            justify-content: space-between;
-
-            &.active {
-                background-color: rgba(0, 0, 0, 0.1);
-            }
-        }
-
-        & i {
-            font-size: 1rem;
-            margin-right: 10px;
-        }
+    & .pinned-icons {
+        position: absolute;
+        right: 5px;
+        top: 5px;
+        font-size: .9rem;
+        color: #483d3d;
     }
 }
