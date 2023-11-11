@@ -1,9 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next';
 import query from '../../../db';
-
-type Data = {
-   name: string;
-};
 
 const testConnection = async () => {
    try {
@@ -15,7 +10,7 @@ const testConnection = async () => {
    }
 }
 
-const handler = async ( _: NextApiRequest, res: NextApiResponse<Data> ) => {
+const handler = async ( req, res ) => {
    const result = await testConnection();
    res.status( 200 ).json( result );
 }

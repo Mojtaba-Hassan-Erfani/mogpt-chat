@@ -1,7 +1,6 @@
-/** @type {import('next').NextConfig} */
 const nextConfig = {
    reactStrictMode: true,
-   pageExtensions: [ 'js', 'jsx', 'ts', 'tsx', 'md', 'mdx' ],
+   pageExtensions: [ 'js', 'jsx', 'md', 'mdx' ],
 };
 
-module.exports = nextConfig;
+export default nextConfig;

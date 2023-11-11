@@ -12,7 +12,7 @@ const pool = new Pool( {
    },
 } );
 
-const query = async( text: string ) => {
+const query = async( text ) => {
    const start = Date.now();
    const res = await pool.query( text );
    const duration = Date.now() - start;

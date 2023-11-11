@@ -2,20 +2,13 @@ import React, { useRef, useEffect, useState } from 'react';
 
 const ChatBox = () => {
 
-    // Types..
-    interface Message {
-        isUser: boolean;
-        text: string;
-    }
-
-
-    const [ messages, setMessages ] = useState<Message[]>( [] );
+    const [ messages, setMessages ] = useState( [] );
     const [ prompt, setPrompt ] = useState( '' );
     const [ isLoading, setIsLoading ] = useState( false );
 
     // OpenAI API handling.
     // ---------------------------------------------------------------------------------------
-    const getResponseFromOpenAi = async ( prompt: string ) => {
+    const getResponseFromOpenAi = async ( prompt ) => {
 
         const response = await fetch( '/api/openai', {
             method: 'POST',
@@ -34,7 +27,7 @@ const ChatBox = () => {
 
     // Textarea functionality.
     // ---------------------------------------------------------------------------------------
-    const textAreaRef = useRef<HTMLTextAreaElement | null>( null );
+    const textAreaRef = useRef( null );
 
     useEffect( () => {
         const textArea = textAreaRef.current;
@@ -58,7 +51,7 @@ const ChatBox = () => {
     }, [] );
 
     // Handle Enter action for Textarea.
-    const handleKeyDown = ( event : React.KeyboardEvent<HTMLTextAreaElement> ) => {
+    const handleKeyDown = ( event ) => {
 
         if ( event.key === 'Enter' && ! event.shiftKey ) {
             event.preventDefault();
