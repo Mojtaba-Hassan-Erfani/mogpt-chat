@@ -1,28 +1,15 @@
 import React, { useRef, useEffect, useState } from 'react';
 
+/**
+ * Renders a chat box component with functionality for sending and receiving messages.
+ *
+ * @return {JSX.Element} The chat box component.
+ */
 const ChatBox = () => {
 
     const [ messages, setMessages ] = useState( [] );
-    const [ prompt, setPrompt ] = useState( '' );
-    const [ isLoading, setIsLoading ] = useState( false );
-
-    // OpenAI API handling.
-    // ---------------------------------------------------------------------------------------
-    const getResponseFromOpenAi = async ( prompt ) => {
-
-        const response = await fetch( '/api/openai', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify( { prompt: prompt } ),
-        } );
-
-        const data = await response.json();
-
-        return data.text;
-    };
-    // ---------------------------------------------------------------------------------------
+    const [ input, setInput ] = useState( '' );
+    const ws = useRef( null );
 
 
     // Textarea functionality.
@@ -31,6 +18,12 @@ const ChatBox = () => {
 
     useEffect( () => {
         const textArea = textAreaRef.current;
+        /**
+         * Resizes the textarea element to fit its content.
+         *
+         * @param {None} None - This function does not take any parameters.
+         * @return {None} None - This function does not return a value.
+         */
         const autoResize = () => {
             if ( textArea ) {
                 textArea.style.height = 'auto';
@@ -50,6 +43,58 @@ const ChatBox = () => {
         }
     }, [] );
 
+    useEffect( () => {
+        ws.current = new WebSocket( 'ws://localhost:3001' );
+
+        /**
+         * Handles the onmessage event of the WebSocket connection.
+         *
+         * @param {Event} event - The event object containing the received data.
+         */
+        ws.current.onmessage = ( event ) => {
+            setMessages( prevMessages => {
+                const lastMessage = prevMessages[prevMessages.length - 1];
+
+                // Check if the last message is from the AI and the received message is not from the user
+                if ( lastMessage && ! lastMessage.isUser ) {
+                    // Append the new content to the last AI message
+                    return prevMessages.map( ( msg, index ) =>
+                        index === prevMessages.length - 1
+                            ? { ...msg, text: msg.text + event.data }
+                            : msg
+                    );
+                } else {
+                    // If the last message is from the user or there is no last message, add a new message
+                    return [ ...prevMessages, { isUser: false, text: event.data } ];
+                }
+            } );
+        };
+
+        /**
+         * Sets up an event listener for when the WebSocket connection is closed.
+         *
+         * @param {type} paramName - description of parameter
+         * @return {type} description of return value
+         */
+        ws.current.onclose = () => {
+            console.log( 'WebSocket Connection closed' );
+        }
+
+        /**
+         * Handles the error event for the WebSocket connection.
+         *
+         * @param {Error} error - The error object describing the WebSocket error.
+         */
+        ws.current.onerror = ( error ) => {
+            console.error( 'WebSocket error:', error );
+        };
+
+
+        return () => {
+            ws.current.close();
+        };
+    }, [] );
+
     // Handle Enter action for Textarea.
     const handleKeyDown = ( event ) => {
 
@@ -66,19 +111,15 @@ const ChatBox = () => {
    // ---------------------------------------------------------------------------------------
    const handleSendMessage = async () => {
 
-        if ( ! prompt || prompt.trim() === '' ) {
+        if ( ! input || input.trim() === '' ) {
             return;
         }
 
-        setIsLoading( true );
-
-        // Add the prompt and response to the messages array.
-        setMessages( prevMessages => [ ...prevMessages, { isUser: true, text: prompt } ] );
-
-        const response = await getResponseFromOpenAi( prompt );
-        setMessages( prevMessages => [ ...prevMessages, { isUser: false, text: response } ] );
-
-        setIsLoading( false );
+        if ( input.trim() ) {
+            setMessages( prevMessages => [ ...prevMessages, { text: input, isUser: true } ] );
+            ws.current.send( input );
+            setInput( '' );
+        }
    }
 
    // ---------------------------------------------------------------------------------------
@@ -90,34 +131,16 @@ const ChatBox = () => {
          {/* Prompt request and response messages */}
         <div className="chat-messages">
             {messages.map( ( message, index ) => (
-                <div key={index} className={`d-flex align-items-start ${message.isUser ? '' : 'prompt-res'}`}>
-                    {message.isUser ? (
-                         <><div className="msg-img"></div><div className="msg-bubble">
-                            <span className="msg-text">
-                                {message.text}
-                            </span>
-                            <i className="bi bi-pin-angle-fill msg-pin" />
-                        </div></>
-                    ) : (
-                        <><div className="msg-img"></div><div className="msg-bubble">
-                            <span className="msg-text">
-                                {message.text}
-                            </span>
-                        </div></>
-                    ) }
-                </div>
-            ) ) }
-            {/* Display loading spinner if isLoading is true */}
-            {isLoading &&
-                <div className="d-flex mb-3 justify-content-start">
-                    <div className="spinner-border" role="status">
-                        <span className="visually-hidden">Loading...</span>
+                <div key={index} className={`d-flex align-items-start ${message.isUser ? 'user-message' : 'bot-message'}`}>
+                    <div className="msg-bubble">
+                        <span className="msg-text">{message.text}</span>
+                        {message.isUser && <i className="bi bi-pin-angle-fill msg-pin" />}
                     </div>
                 </div>
-            }
+            ) ) }
         </div>
         {/* End Prompt request and response messages  */}
-        <form className="chatbox" onSubmit={handleSendMessage}>
+        <form className="chatbox" onSubmit={ ( e ) => {e.preventDefault(); handleSendMessage();}}>
             <div className="mb-3 input-group">
                 <label htmlFor="prompt-input" className="form-label visually-hidden">
                     Enter your message:
@@ -128,7 +151,8 @@ const ChatBox = () => {
                     rows={1}
                     ref={textAreaRef}
                     onKeyDown={handleKeyDown}
-                    onChange={( ( e ) => setPrompt( e.target.value ) ) }
+                    onChange={( ( e ) => setInput( e.target.value ) ) }
+                    value={input}
                     ></textarea>
                     <div className="send-icon">
                         <a onClick={handleSendMessage}>
