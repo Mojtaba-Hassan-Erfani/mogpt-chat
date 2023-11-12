@@ -3,8 +3,8 @@ const RightSidebar = () => {
         <div className="sidebar-right d-flex flex-column vh-100 border-end px-4 py-3 col-md-2">
             <h5 className="text-muted">Language Model</h5>
             <span><small className="text-muted">Choose language model...</small></span>
-            <select className="form-select mb-4" aria-label="Language select">
-                <option selected>gpt-3.5-turbo</option>
+            <select className="form-select mb-4" aria-label="Language select" defaultValue={ 'gpt-3.5-turbo' }>
+                <option value="1">gpt-3.5-turbo</option>
                 <option value="2">code-davinci-002</option>
                 <option value="3">gpt-4</option>
             </select>
